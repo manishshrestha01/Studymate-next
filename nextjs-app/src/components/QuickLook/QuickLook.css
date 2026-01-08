@@ -1,0 +1,222 @@
+/* Full Screen Document Viewer */
+.viewer-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Close button - top right - simple style */
+.viewer-close {
+  position: absolute;
+  top: 50px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.viewer-close:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+/* File name - compact */
+.viewer-filename {
+  position: absolute;
+  top: 50px;
+  left: 16px;
+  max-width: calc(100% - 80px);
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 10000;
+}
+
+/* Main content area */
+.viewer-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Full screen iframe viewer (PDF, PPTX, DOCX) */
+.fullscreen-viewer {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: white;
+}
+
+/* Text files */
+.fullscreen-viewer.text-viewer {
+  background: #1e1e1e;
+}
+
+/* Full screen image */
+.fullscreen-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Full screen video */
+.fullscreen-video {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Info card for folders and unsupported files */
+.preview-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+.info-icon {
+  font-size: 100px;
+  margin-bottom: 24px;
+}
+
+.preview-info h2 {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  word-break: break-word;
+  max-width: 80vw;
+}
+
+.preview-info p {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+@media (max-width: 480px) {
+  .viewer-fullscreen {
+    height: 100%;
+    height: 100dvh;
+  }
+  
+  .viewer-close {
+    top: max(16px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+  }
+  
+  .viewer-close:active {
+    transform: scale(0.9);
+  }
+  
+  .viewer-filename {
+    top: max(16px, env(safe-area-inset-top));
+    left: max(16px, env(safe-area-inset-left));
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    max-width: calc(100% - 80px);
+  }
+  
+  .viewer-content {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  
+  .info-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+  
+  .preview-info h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    max-width: 90vw;
+  }
+  
+  .preview-info p {
+    font-size: 13px;
+    max-width: 90vw;
+  }
+  
+  .preview-info a {
+    color: var(--accent-blue);
+    text-decoration: none;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  .viewer-fullscreen {
+    height: 100%;
+    height: 100dvh;
+  }
+  
+  .viewer-close {
+    top: max(20px, env(safe-area-inset-top));
+    right: max(16px, env(safe-area-inset-right));
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .viewer-filename {
+    top: max(20px, env(safe-area-inset-top));
+    left: max(16px, env(safe-area-inset-left));
+    font-size: 14px;
+    padding: 8px 14px;
+  }
+  
+  .viewer-content {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  
+  .info-icon {
+    font-size: 64px;
+  }
+  
+  .preview-info h2 {
+    font-size: 22px;
+  }
+  
+  .preview-info p {
+    font-size: 15px;
+  }
+}
