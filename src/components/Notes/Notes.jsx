@@ -1,10 +1,14 @@
+'use client';
+
 import { useEffect, useState } from "react";
-import { supabase, isSupabaseConfigured } from "../../lib/supabase";
-import { ExcalidrawCanvas } from "./ExcalidrawCanvas";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import ExcalidrawCanvas from "./ExcalidrawCanvas";
 import "./Notes.css";
 
 const Notes = ({ onClose }) => {
   const [noteId, setNoteId] = useState(null);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   /* auto-create single drawing */
   useEffect(() => {
@@ -42,17 +46,47 @@ const Notes = ({ onClose }) => {
         .select("id")
         .single();
 
-      setNoteId(created.id);
+      if (created?.id) {
+        setNoteId(created.id);
+      }
     };
 
     init();
   }, []);
 
+  const handleMaximize = () => {
+    setIsMaximized(!isMaximized);
+  };
+
+  const handleMinimize = () => {
+    setIsMinimized(true);
+  };
+
+  if (isMinimized) {
+    return (
+      <div className="notes-minimized" onClick={() => setIsMinimized(false)}>
+        <span>📝</span>
+        <span>Notes</span>
+      </div>
+    );
+  }
+
   return (
-    <div className="notes-app glass-dark">
+    <div className={`notes-app glass-dark ${isMaximized ? 'maximized' : ''}`}>
       <div className="notes-toolbar">
-        <button className="window-btn close" onClick={onClose}>×</button>
+        <div className="window-controls">
+          <button className="window-btn close" onClick={onClose}>
+            <span>×</span>
+          </button>
+          <button className="window-btn minimize" onClick={handleMinimize}>
+            <span>−</span>
+          </button>
+          <button className="window-btn maximize" onClick={handleMaximize}>
+            <span>+</span>
+          </button>
+        </div>
         <div className="notes-title">Notes (Drawing Mode)</div>
+        <div className="notes-toolbar-spacer"></div>
       </div>
 
       <div className="notes-editor">

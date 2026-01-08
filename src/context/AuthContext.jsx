@@ -1,5 +1,7 @@
+'use client'
+
 import { createContext, useContext, useEffect, useState } from 'react'
-import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 
 const AuthContext = createContext({})
 
@@ -61,7 +63,7 @@ export const AuthProvider = ({ children }) => {
       const { data, error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/home` // Changed to /home
+          emailRedirectTo: `${window.location.origin}/home`
         }
       })
 

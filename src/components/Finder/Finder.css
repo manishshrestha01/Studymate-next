@@ -355,56 +355,6 @@
   color: var(--text-tertiary);
 }
 
-/* New folder input */
-.new-folder-input {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  margin-bottom: 16px;
-  grid-column: 1 / -1;
-}
-
-.new-folder-input input {
-  flex: 1;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 8px 12px;
-  color: var(--text-primary);
-  font-size: 14px;
-}
-
-.new-folder-input input:focus {
-  outline: none;
-  border-color: var(--accent-blue);
-}
-
-.new-folder-input button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: var(--transition-fast);
-}
-
-.new-folder-input button:first-of-type {
-  background: var(--accent-blue);
-  color: white;
-}
-
-.new-folder-input button:last-of-type {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
-}
-
-.new-folder-input button:hover {
-  filter: brightness(1.1);
-}
-
 /* Loading state */
 .finder-loading {
   display: flex;
@@ -426,60 +376,6 @@
   50% { opacity: 0.5; transform: scale(1.1); }
 }
 
-/* Upload progress */
-.upload-progress {
-  padding: 12px 16px;
-  background: rgba(0, 122, 255, 0.2);
-  border-radius: 8px;
-  margin-bottom: 16px;
-  grid-column: 1 / -1;
-}
-
-.progress-bar {
-  height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--accent-blue);
-  transition: width 0.3s ease;
-}
-
-.upload-progress p {
-  color: var(--text-secondary);
-  font-size: 12px;
-  margin: 0;
-}
-
-/* Drag overlay */
-.drag-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 122, 255, 0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-}
-
-.drag-icon {
-  font-size: 64px;
-  margin-bottom: 16px;
-}
-
-.drag-overlay p {
-  color: white;
-  font-size: 18px;
-  font-weight: 500;
-}
-
 /* Error message */
 .finder-error {
   padding: 12px 16px;
@@ -496,13 +392,6 @@
   margin: 0;
 }
 
-/* Empty hint */
-.empty-hint {
-  font-size: 12px;
-  margin-top: 8px;
-  color: var(--text-tertiary);
-}
-
 /* Demo badge */
 .demo-badge {
   background: rgba(255, 193, 7, 0.2);
@@ -517,6 +406,21 @@
 .demo-notice {
   color: #ffc107;
   font-size: 11px;
+}
+
+/* Toast / transient message */
+.toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(80px + env(safe-area-inset-bottom));
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  z-index: 2200;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
 
 /* ==================== RESPONSIVE DESIGN ==================== */
@@ -623,14 +527,11 @@
     display: none;
   }
   
-  /* Bring the finder above the dock so items at the bottom are tappable */
   .finder {
     z-index: 2000;
-    /* Make sure the last rows are not covered by the dock; leave room for dock + safe area */
     padding-bottom: calc(80px + env(safe-area-inset-bottom));
   }
 
-  /* When Finder is maximized on mobile, ensure it also stays above the dock */
   .finder.maximized {
     z-index: 2000;
     padding-bottom: calc(80px + env(safe-area-inset-bottom));
@@ -640,86 +541,10 @@
 /* Small mobile devices */
 @media (max-width: 480px) {
   .finder {
-    height: calc(100vh - 70px);
-  }
-  
-  .finder-toolbar {
-    padding: 8px;
-  }
-  
-  .finder-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-  }
-  
-  .breadcrumb-item {
-    font-size: 12px;
-    padding: 3px 6px;
-  }
-  
-  .finder-content.grid {
-    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
-    gap: 8px;
-  }
-  
-  .finder-item {
-    padding: 10px 6px;
-  }
-  
-  .item-icon {
-    font-size: 32px;
-  }
-  
-  .item-name {
-    font-size: 10px;
-  }
-  
-  .finder-sidebar {
-    max-height: 100px;
-    padding: 10px;
-  }
-}
-
-/* Landscape mode on mobile */
-@media (max-height: 500px) and (orientation: landscape) {
-  .finder {
-    height: calc(100vh - 60px);
-  }
-  
-  .finder-sidebar {
-    max-height: 80px;
-  }
-  
-  .finder-toolbar {
-    padding: 6px 10px;
-  }
-}
-
-/* Tablet devices (768px to 1023px) */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .finder {
-    width: 95%;
-    max-width: 900px;
-  }
-  
-  .finder-toolbar { flex-wrap: wrap; gap: 8px; padding: 10px; }
-  .finder-layout { flex-direction: column; }
-  .finder-sidebar { width: 100%; max-height: 120px; overflow-y: auto; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
-  .sidebar-section ul { display: flex; flex-wrap: wrap; gap: 8px; }
-  .finder-content.grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 12px; }
-  .finder { z-index: 2000; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
-  .finder-view-toggle { display: none; }
-  .finder-statusbar { display: none; }
-}
-
-/* Small mobile devices (320px to 480px) - iPhone App Style */
-@media (max-width: 480px) {
-  .finder {
     width: 100%;
     max-width: none;
     height: 100%;
-    height: 100dvh; /* Use dynamic viewport height for mobile browsers */
+    height: 100dvh;
     margin: 0;
     border-radius: 0;
     box-shadow: none;
@@ -732,7 +557,6 @@
     box-shadow: none;
   }
   
-  /* iPhone-style top bar */
   .finder-toolbar {
     display: flex;
     align-items: center;
@@ -790,7 +614,6 @@
     display: none;
   }
   
-  /* iPhone-style layout - content takes up most space */
   .finder-layout {
     display: flex;
     flex-direction: column;
@@ -798,7 +621,6 @@
     overflow: hidden;
   }
   
-  /* Bottom tab bar (like iOS) */
   .finder-sidebar {
     width: 100%;
     height: auto;
@@ -855,7 +677,6 @@
     color: var(--accent-blue);
   }
   
-  /* Main content - scrollable */
   .finder-content {
     flex: 1;
     padding: 12px 8px;
@@ -866,7 +687,6 @@
     background: #000;
   }
   
-  /* Grid layout for files - iPhone style */
   .finder-content.grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -875,7 +695,6 @@
     padding: 8px 4px;
   }
   
-  /* iOS-style file item */
   .finder-item {
     flex-direction: column;
     gap: 4px;
@@ -910,7 +729,6 @@
     word-break: break-word;
   }
   
-  /* Bottom status bar - hidden on iPhone */
   .finder-statusbar {
     display: none;
   }
@@ -920,7 +738,7 @@
   }
 }
 
-/* Medium mobile devices (481px to 767px) - iPad/Tablet App Style */
+/* Medium mobile devices (481px to 767px) */
 @media (min-width: 481px) and (max-width: 767px) {
   .finder {
     width: 100%;
@@ -937,7 +755,6 @@
     box-shadow: none;
   }
   
-  /* iPad-style top bar */
   .finder-toolbar {
     display: flex;
     align-items: center;
@@ -1004,7 +821,6 @@
     font-size: 14px;
   }
   
-  /* Two-column layout for tablet */
   .finder-layout {
     display: grid;
     grid-template-columns: 220px 1fr;
@@ -1012,7 +828,6 @@
     overflow: hidden;
   }
   
-  /* iPad sidebar */
   .finder-sidebar {
     width: 220px;
     padding: 12px;
@@ -1062,7 +877,6 @@
     color: white;
   }
   
-  /* Main content - scrollable */
   .finder-content {
     flex: 1;
     padding: 12px;
@@ -1071,7 +885,6 @@
     background: #000;
   }
   
-  /* Grid layout for tablet */
   .finder-content.grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -1108,22 +921,6 @@
   }
 }
 
-/* Toast / transient message */
-.toast {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(80px + env(safe-area-inset-bottom));
-  background: rgba(0,0,0,0.8);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 12px;
-  font-size: 13px;
-  z-index: 2200;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-}
-
 @media (min-width: 769px) {
   .toast { bottom: 48px; }
 }
-

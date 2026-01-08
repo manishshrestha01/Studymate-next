@@ -1,50 +1,120 @@
-# React + Vite
+# StudyMate - Next.js
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A complete study resource hub for Pokhara University Computer Engineering students. This is the **Next.js migration** of the original React + Vite application.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🎓 Access study materials for all 8 semesters
+- 📚 Browse notes organized by subject
+- 📝 Create personal notes with Excalidraw drawing canvas
+- 🔐 Authentication with Supabase (Google OAuth)
+- 🎨 macOS-inspired UI with glassmorphism design
+- 🖥️ Desktop experience with Finder, Notes, and Settings apps
+- 🌓 Multiple wallpaper themes
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework**: Next.js 16 (App Router with Turbopack)
+- **Styling**: Tailwind CSS + Custom CSS
+- **Authentication**: Supabase Auth
+- **Database**: Supabase (PostgreSQL)
+- **Storage**: Supabase Storage
+- **Drawing**: Excalidraw
+- **Icons**: React Icons
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
 
-## Quick start
-1. Install dependencies:
+- Node.js 18+
+- npm or yarn
+- Supabase account (for backend)
 
-	npm install
+### Installation
 
-2. Run dev server:
+1. Clone and navigate to the project:
+```bash
+cd nextjs-app
+```
 
-	npm run dev
+2. Install dependencies:
+```bash
+npm install
+```
 
-3. Open the URL printed by Vite (usually http://localhost:5173).
+3. Set up environment variables:
+```bash
+cp .env.local.example .env.local
+```
 
-## Where to edit
-- Edit the app entry at `src/App.jsx`.
-- The routing and navigation example is in `src/Routes.jsx`.
-- Components live in `src/components/` (for example `Home.jsx`).
+4. Edit `.env.local` with your Supabase credentials:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_GITHUB_TOKEN=your_github_token (optional)
+```
 
-No additional packages are required to try the in-app navigation example added to `Routes.jsx`.
-# React + Vite
+5. Run the development server:
+```bash
+npm run dev
+```
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+6. Open [http://localhost:3000](http://localhost:3000)
 
-Currently, two official plugins are available:
+## Project Structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── dashboard/          # Main desktop app
+│   ├── login/              # Authentication
+│   ├── user-info/          # Profile completion
+│   ├── privacy-policy/     # Privacy policy page
+│   ├── terms-of-service/   # Terms of service page
+│   └── not-found.js        # 404 page
+├── components/             # React components
+│   ├── Desktop/            # Main desktop container
+│   ├── Dock/               # macOS-style dock
+│   ├── Finder/             # File browser
+│   ├── Notes/              # Excalidraw drawing app
+│   ├── QuickLook/          # File preview modal
+│   └── Settings/           # Settings panel
+├── context/                # React contexts
+│   ├── AuthContext.jsx     # Authentication state
+│   └── BackgroundContext.jsx # Wallpaper settings
+├── hooks/                  # Custom React hooks
+│   ├── useGitHubNotes.js   # GitHub API for notes
+│   ├── useNotes.js         # Supabase notes CRUD
+│   └── useUserProfile.js   # User profile management
+├── lib/                    # Utility libraries
+│   ├── database.js         # Supabase database operations
+│   ├── github.js           # GitHub API helper
+│   ├── storage.js          # Supabase storage operations
+│   └── supabase.js         # Supabase client
+└── styles/                 # Global styles
+    └── glass.css           # CSS variables & glass effects
+```
 
-## React Compiler
+## Migration Notes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Key Changes from React + Vite
 
-## Expanding the ESLint configuration
+1. **Environment Variables**: `VITE_*` → `NEXT_PUBLIC_*`
+2. **Routing**: `react-router-dom` → `next/navigation`
+3. **Navigation**: `useNavigate()` → `useRouter().push()`
+4. **Links**: React Router `Link` → Next.js `Link` (with `href` prop)
+5. **Client Components**: Added `'use client'` directive to interactive components
+6. **Excalidraw**: Uses `dynamic()` import with `ssr: false` for SSR compatibility
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Deploy on Vercel
+
+The easiest way to deploy is using [Vercel](https://vercel.com):
+
+```bash
+npm run build
+vercel deploy
+```
+
+## License
+
+MIT License - Feel free to use this for educational purposes.

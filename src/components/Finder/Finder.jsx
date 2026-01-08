@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useRef, useEffect } from 'react'
 import { useGitHubNotes } from '../../hooks/useGitHubNotes'
 import { useAuth } from '../../context/AuthContext'
@@ -57,9 +59,9 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
   const longPressStartPos = useRef({ x: 0, y: 0 })
   const suppressClickRef = useRef(false)
   const [pressedItemId, setPressedItemId] = useState(null)
-   const [windowState, setWindowState] = useState('normal') // 'normal', 'maximized', 'minimized'
+  const [windowState, setWindowState] = useState('normal')
    
-   const finderRef = useRef(null)
+  const finderRef = useRef(null)
 
   // Auto-focus finder on mount
   useEffect(() => {
@@ -113,12 +115,9 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
       longPressActiveRef.current = true
       suppressClickRef.current = true
       setPressedItemId(item.id)
-      // light haptic feedback when long-press action fires
       try { navigator.vibrate?.(12) } catch (e) {}
       await toggleFavoriteForItem(item)
-      // brief pressed visual
       setTimeout(() => setPressedItemId(null), 600)
-      // keep suppressing click briefly
       setTimeout(() => { suppressClickRef.current = false }, 500)
     }, 650)
   }
@@ -141,14 +140,13 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
     longPressActiveRef.current = false
   }
 
-  // Centralized favorite toggle helper (used by Spacebar and long-press)
+  // Centralized favorite toggle helper
   const toggleFavoriteForItem = async (item) => {
     if (!user?.id) {
       showToast('Sign in to add favorites')
       return
     }
 
-    // Normalize item
     let itemToProcess = item
     if (item.item_data && typeof item.item_data === 'string') {
       try { itemToProcess = JSON.parse(item.item_data) } catch (e) { itemToProcess = item }
@@ -208,13 +206,12 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
     const handleKeyDown = async (e) => {
       if (e.code === 'Space' && selectedItem && user?.id) {
         e.preventDefault()
-        // find the selected item from original items or displayedItems
         let item = items.find(i => i.id === selectedItem)
         if (!item) item = displayedItems.find(i => i.id === selectedItem)
         if (!item) return
         await toggleFavoriteForItem(item)
-       }
-     }
+      }
+    }
 
     const finder = finderRef.current
     if (finder) {
@@ -238,7 +235,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
     return className
   }
 
-  // Minimized state - show as small bar
   if (windowState === 'minimized') {
     return (
       <div className="finder-minimized" onClick={() => setWindowState('normal')}>
@@ -250,7 +246,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
 
   const handleItemClick = (item) => {
     if (suppressClickRef.current) {
-      // suppress intentional click after long-press
       suppressClickRef.current = false
       return
     }
@@ -263,7 +258,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
   const handleItemDoubleClick = async (item) => {
     const itemType = item.type || item.item_type
     
-    // Only track recents for files, not folders
     if (itemType !== 'folder' && user?.id) {
       const recentItem = {
         item_id: item.id || item.item_id,
@@ -283,7 +277,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
       await upsertRecentTab({ userId: user.id, item: recentItem })
     }
 
-    // Parse item data if it's stored as JSON (from favorites/recents)
     let itemToProcess = item
     if (item.item_data && typeof item.item_data === 'string') {
       try {
@@ -296,7 +289,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
     const itemTypeToCheck = itemToProcess.type || item.type || item.item_type
     
     if (itemTypeToCheck === 'folder') {
-      // Navigate to folder - use parsed data if available
       const folderId = itemToProcess.id || item.id || item.item_id
       const folderName = itemToProcess.name || item.name || item.item_name
       const folderPath = itemToProcess.path || item.path || item.item_path
@@ -306,7 +298,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
         setSelectedItem(null)
       }
     } else {
-      // Open file
       const itemWithUrl = { 
         ...itemToProcess, 
         name: itemToProcess.name || item.name || item.item_name,
@@ -323,7 +314,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
       className="finder glass-dark"
       tabIndex={0}
     >
-
       {/* Toolbar */}
       <div className="finder-toolbar">
         {/* Window Controls */}
@@ -455,7 +445,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
 
           {/* Items */}
           {!loading && displayedItems.map(item => {
-            // Parse item data if stored as JSON
             let displayItem = item
             if (item.item_data && typeof item.item_data === 'string') {
               try {
@@ -476,15 +465,15 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
                 onTouchEnd={endTouch}
                 onTouchCancel={cancelLongPress}
               >
-                 <div className="item-icon">
-                   {(displayItem.type || item.type || item.item_type) === 'folder' 
-                     ? '📁' 
-                     : getFileIcon(displayItem.fileType || item.fileType || item.file_type)
-                   }
-                 </div>
-                 <span className="item-name">{displayItem.name || item.name || item.item_name}</span>
-               </div>
-             )
+                <div className="item-icon">
+                  {(displayItem.type || item.type || item.item_type) === 'folder' 
+                    ? '📁' 
+                    : getFileIcon(displayItem.fileType || item.fileType || item.file_type)
+                  }
+                </div>
+                <span className="item-name">{displayItem.name || item.name || item.item_name}</span>
+              </div>
+            )
           })}
         </div>
       </div>

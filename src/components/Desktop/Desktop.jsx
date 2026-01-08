@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { useBackground } from '../../context/BackgroundContext'
 import Finder from '../Finder/Finder'

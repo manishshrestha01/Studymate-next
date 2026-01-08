@@ -1,5 +1,7 @@
+'use client'
+
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from 'next/navigation'
 import { useBackground } from '../../context/BackgroundContext'
 import { useUserProfile } from '../../hooks/useUserProfile'
 import { useAuth } from '../../context/AuthContext'
@@ -7,13 +9,13 @@ import SettingRow from './SettingRow'
 import './Settings.css'
 
 const Settings = ({ onClose, initialSection = 'profile' }) => {
-  const navigate = useNavigate()
+  const router = useRouter()
   const { backgrounds, currentBg, changeBackground, customBg, setCustomBackground, removeCustomBackground } = useBackground()
   const { profile, updateProfile, getInitials, error: profileError } = useUserProfile()
   const { user, signOut, isAuthenticated } = useAuth()
   const [activeSection, setActiveSection] = useState(initialSection)
-  const [mobileView, setMobileView] = useState(null) // null | 'profile' | 'wallpaper' | 'about'
-  const [windowState, setWindowState] = useState('normal') // 'normal', 'maximized', 'minimized'
+  const [mobileView, setMobileView] = useState(null)
+  const [windowState, setWindowState] = useState('normal')
   const [formData, setFormData] = useState({
     full_name: profile.full_name || '',
     semester: profile.semester || '',
@@ -27,7 +29,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   const touchStartX = useRef(null)
   const touchDelta = useRef(0)
 
-  // Keep local form state in sync with profile when it loads/changes
   useEffect(() => {
     setFormData({
       full_name: profile.full_name || '',
@@ -42,15 +43,12 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     '5th Semester', '6th Semester', '7th Semester', '8th Semester'
   ]
 
-  // Faculty is currently fixed; show as non-editable input (no dropdown)
-
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   const handleSaveProfile = () => {
-    // Persist profile and mark setup as complete
     updateProfile({ ...formData, setupComplete: true })
   }
 
@@ -58,7 +56,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     try {
       await signOut()
       onClose()
-      navigate('/')
+      router.push('/')
     } catch (err) {
       console.error('Sign out error:', err)
     }
@@ -72,7 +70,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   const handleFileChange = (e) => {
     const file = e.target?.files?.[0]
     if (file) processFile(file)
-    // clear input so same file can be selected again if needed
     e.target.value = ''
   }
 
@@ -93,7 +90,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
       setUploadError('Please upload a valid image file.')
       return
     }
-    // Limit file size to 8MB
     if (file.size > 8 * 1024 * 1024) {
       setUploadError('Image is too large (max 8 MB).')
       return
@@ -149,7 +145,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
 
   const handleTouchEnd = () => {
     const delta = touchDelta.current || 0
-    // Swipe right to close if distance > 80px
     if (delta > 80) setMobileView(null)
     touchStartX.current = null
     touchDelta.current = 0
@@ -209,7 +204,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
             <h3>{sections.find(s => s.id === activeSection)?.label}</h3>
           </div>
 
-          {/* Global hidden file input - available for mobile and desktop uploads */}
           <input
             ref={fileInputRef}
             type="file"
@@ -252,7 +246,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                       onClick={handleSignOut}
                       danger
                     />
-                   </div>
+                  </div>
                 </>
               ) : (
                 <div className="mobile-subview" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
@@ -267,8 +261,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                   <div style={{ paddingTop: 12 }}>
                     {mobileView === 'profile' && (
                       <div className="profile-section">
-                        {/* Reuse the desktop profile form content inside mobile subview */}
-                        {/* ...re-use the same form markup... */}
                         <div className="profile-card">
                           <div className="profile-avatar">
                             {profile.avatar ? (
@@ -284,9 +276,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                               {profile.semester && (
                                 <span className="profile-badge">{profile.semester}</span>
                               )}
-                              <div className="profile-actions">
-                                {/* Removed Wallpaper button - accessible from main navigation */}
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -314,7 +303,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                           <button className="btn-save-profile" onClick={handleSaveProfile}>
                             Save
                           </button>
-                          {/* Removed Change Wallpaper button - accessible from main navigation */}
                         </div>
                       </div>
                     )}
@@ -386,199 +374,191 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
               )}
             </div>
 
-            {/* Desktop-only sections (hidden on mobile) */}
+            {/* Desktop-only sections */}
             <div className="desktop-only">
-            {/* Profile Section */}
-            {activeSection === 'profile' && (
-              <div className="profile-section">
-                 {/* Profile Card - Like iCloud */}
-                 <div className="profile-card">
-                   <div className="profile-avatar">
-                     {profile.avatar ? (
-                       <img src={profile.avatar} alt={profile.full_name} />
-                     ) : (
-                       <span className="avatar-initials">{getInitials()}</span>
-                     )}
-                   </div>
-                   <div className="profile-card-info">
-                     <div className="profile-card-info-inner">
-                       <h4>{profile.full_name || 'Set up your profile'}</h4>
-                       <p>{user?.email || profile.email || 'Add your academic details'}</p>
-                       {profile.semester && (
-                         <span className="profile-badge">{profile.semester}</span>
-                       )}
-                     </div>
-                   </div>
-                 </div>
-
-                 {/* Profile Form */}
-                 <div className="profile-form">
-                   {profileError && (
-                     <div style={{ color: 'red', marginBottom: 12 }}>
-                       {profileError}
-                     </div>
-                   )}
-
-                  {/* Edit header so users know this section is editable */}
-                  <div className="profile-edit-header">
-                    <span className="profile-edit-icon" aria-hidden>✏️</span>
-                    <div className="profile-edit-text">
-                      <div className="profile-edit-title">Edit</div>
-                      <div className="profile-edit-desc">Update your profile information below:</div>
+              {activeSection === 'profile' && (
+                <div className="profile-section">
+                  <div className="profile-card">
+                    <div className="profile-avatar">
+                      {profile.avatar ? (
+                        <img src={profile.avatar} alt={profile.full_name} />
+                      ) : (
+                        <span className="avatar-initials">{getInitials()}</span>
+                      )}
                     </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="full_name">Full Name</label>
-                    <input
-                      type="text"
-                      id="full_name"
-                      name="full_name"
-                      placeholder="Enter your name"
-                      value={formData.full_name}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="semester">Current Semester</label>
-                    <select
-                      id="semester"
-                      name="semester"
-                      value={formData.semester}
-                      onChange={handleInputChange}
-                    >
-                      <option value="">Select Semester</option>
-                      {semesters.map(sem => (
-                        <option key={sem} value={sem}>{sem}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="faculty">Faculty</label>
-                    <input
-                      type="text"
-                      id="faculty"
-                      name="faculty"
-                      value={formData.faculty}
-                      disabled
-                      style={{ cursor: 'not-allowed' }}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="university">University</label>
-                    <input
-                      type="text"
-                      id="university"
-                      name="university"
-                      value={formData.university}
-                      onChange={handleInputChange}
-                      disabled
-                    />
-                  </div>
-
-                  <button className="btn-save-profile" onClick={handleSaveProfile}>
-                    Save Profile
-                  </button>
-                </div>
-
-                {/* Account Section */}
-                {isAuthenticated && (
-                  <div className="account-section">
-                    <h4>Account</h4>
-                    <div className="account-info">
-                      <p>Signed in as <strong>{user?.email}</strong></p>
-                      <button className="btn-signout" onClick={handleSignOut}>
-                        Sign Out
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Wallpaper Section */}
-            {activeSection === 'wallpaper' && (
-              <div className="wallpaper-section">
-                <p className="section-description">Choose a wallpaper for your desktop</p>
-                <div className="background-grid">
-                  {backgrounds.map(bg => (
-                    <div
-                      key={bg.id}
-                      className={`background-option ${currentBg.id === bg.id ? 'active' : ''}`}
-                      style={{ background: bg.value }}
-                      onClick={() => changeBackground(bg.id)}
-                    >
-                      <span className="bg-name">{bg.name}</span>
-                      {currentBg.id === bg.id && <span className="bg-check">✓</span>}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Custom Background Upload */}
-                <div className="custom-bg-section">
-                  <p className="section-description" style={{ marginTop: 18 }}>Or upload your own background</p>
-
-                  <div
-                    className={`custom-bg-dropzone ${dropActive ? 'active' : ''}`}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                    onDragEnter={() => setDropActive(true)}
-                    onDragLeave={() => setDropActive(false)}
-                    onClick={handleUploadClick}
-                  >
-                    {customBg ? (
-                      <div className="custom-bg-preview" style={{ backgroundImage: `url(${customBg})` }}>
-                        <div className="custom-bg-badge">Custom</div>
+                    <div className="profile-card-info">
+                      <div className="profile-card-info-inner">
+                        <h4>{profile.full_name || 'Set up your profile'}</h4>
+                        <p>{user?.email || profile.email || 'Add your academic details'}</p>
+                        {profile.semester && (
+                          <span className="profile-badge">{profile.semester}</span>
+                        )}
                       </div>
-                    ) : (
-                      <div className="custom-bg-placeholder">Drag & drop an image here or click to browse</div>
-                    )}
+                    </div>
                   </div>
 
-                  {uploadError && <div className="upload-error">{uploadError}</div>}
+                  <div className="profile-form">
+                    {profileError && (
+                      <div style={{ color: 'red', marginBottom: 12 }}>
+                        {profileError}
+                      </div>
+                    )}
 
-                  <div className="custom-bg-actions">
-                    {!customBg ? (
-                      <button className="btn-save-profile" onClick={handleUploadClick} disabled={uploading} style={{ marginTop: 12 }}>
-                        {uploading ? 'Uploading...' : 'Upload custom background'}
-                      </button>
-                    ) : (
-                      <div style={{ display: 'flex', gap: 8 }}>
-                        <button className="btn-save-profile" onClick={() => removeCustomBackground()} style={{ marginTop: 12, background: '#ff3b30' }}>
-                          Remove custom background
+                    <div className="profile-edit-header">
+                      <span className="profile-edit-icon" aria-hidden>✏️</span>
+                      <div className="profile-edit-text">
+                        <div className="profile-edit-title">Edit</div>
+                        <div className="profile-edit-desc">Update your profile information below:</div>
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="full_name">Full Name</label>
+                      <input
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        placeholder="Enter your name"
+                        value={formData.full_name}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="semester">Current Semester</label>
+                      <select
+                        id="semester"
+                        name="semester"
+                        value={formData.semester}
+                        onChange={handleInputChange}
+                      >
+                        <option value="">Select Semester</option>
+                        {semesters.map(sem => (
+                          <option key={sem} value={sem}>{sem}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="faculty">Faculty</label>
+                      <input
+                        type="text"
+                        id="faculty"
+                        name="faculty"
+                        value={formData.faculty}
+                        disabled
+                        style={{ cursor: 'not-allowed' }}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="university">University</label>
+                      <input
+                        type="text"
+                        id="university"
+                        name="university"
+                        value={formData.university}
+                        onChange={handleInputChange}
+                        disabled
+                      />
+                    </div>
+
+                    <button className="btn-save-profile" onClick={handleSaveProfile}>
+                      Save Profile
+                    </button>
+                  </div>
+
+                  {isAuthenticated && (
+                    <div className="account-section">
+                      <h4>Account</h4>
+                      <div className="account-info">
+                        <p>Signed in as <strong>{user?.email}</strong></p>
+                        <button className="btn-signout" onClick={handleSignOut}>
+                          Sign Out
                         </button>
                       </div>
-                    )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeSection === 'wallpaper' && (
+                <div className="wallpaper-section">
+                  <p className="section-description">Choose a wallpaper for your desktop</p>
+                  <div className="background-grid">
+                    {backgrounds.map(bg => (
+                      <div
+                        key={bg.id}
+                        className={`background-option ${currentBg.id === bg.id ? 'active' : ''}`}
+                        style={{ background: bg.value }}
+                        onClick={() => changeBackground(bg.id)}
+                      >
+                        <span className="bg-name">{bg.name}</span>
+                        {currentBg.id === bg.id && <span className="bg-check">✓</span>}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="custom-bg-section">
+                    <p className="section-description" style={{ marginTop: 18 }}>Or upload your own background</p>
+
+                    <div
+                      className={`custom-bg-dropzone ${dropActive ? 'active' : ''}`}
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                      onDragEnter={() => setDropActive(true)}
+                      onDragLeave={() => setDropActive(false)}
+                      onClick={handleUploadClick}
+                    >
+                      {customBg ? (
+                        <div className="custom-bg-preview" style={{ backgroundImage: `url(${customBg})` }}>
+                          <div className="custom-bg-badge">Custom</div>
+                        </div>
+                      ) : (
+                        <div className="custom-bg-placeholder">Drag & drop an image here or click to browse</div>
+                      )}
+                    </div>
+
+                    {uploadError && <div className="upload-error">{uploadError}</div>}
+
+                    <div className="custom-bg-actions">
+                      {!customBg ? (
+                        <button className="btn-save-profile" onClick={handleUploadClick} disabled={uploading} style={{ marginTop: 12 }}>
+                          {uploading ? 'Uploading...' : 'Upload custom background'}
+                        </button>
+                      ) : (
+                        <div style={{ display: 'flex', gap: 8 }}>
+                          <button className="btn-save-profile" onClick={() => removeCustomBackground()} style={{ marginTop: 12, background: '#ff3b30' }}>
+                            Remove custom background
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* About Section */}
-            {activeSection === 'about' && (
-              <div className="about-section">
-                <div className="about-app-icon">
-                  <picture>
-                    <source srcSet="/white.svg" media="(prefers-color-scheme: dark)" />
-                    <img src="/black.svg" alt="StudyMate logo" className="about-app-icon-img" />
-                  </picture>
+              {activeSection === 'about' && (
+                <div className="about-section">
+                  <div className="about-app-icon">
+                    <picture>
+                      <source srcSet="/white.svg" media="(prefers-color-scheme: dark)" />
+                      <img src="/black.svg" alt="StudyMate logo" className="about-app-icon-img" />
+                    </picture>
+                  </div>
+                  <h4>StudyMate</h4>
+                  <p className="about-version">Version 1.0.0</p>
+                  <div className="about-details">
+                    <p>Your study companion — organized notes, past papers, and semester-wise resources for PU students.</p>
+                    <p>Discover curated materials and helpful guides to support your learning across all semesters.</p>
+                  </div>
+                  <div className="about-credits">
+                    <p>Built with Next.js</p>
+                    <p>© 2025 StudyMate</p>
+                  </div>
                 </div>
-                <h4>StudyMate</h4>
-                <p className="about-version">Version 1.0.0</p>
-                <div className="about-details">
-                  <p>Your study companion — organized notes, past papers, and semester-wise resources for PU students.</p>
-                  <p>Discover curated materials and helpful guides to support your learning across all semesters.</p>
-                </div>
-                <div className="about-credits">
-                  <p>Built with React + Vite</p>
-                  <p>© 2025 StudyMate</p>
-                </div>
-              </div>
-            )}
-            </div> {/* end .desktop-only */}
+              )}
+            </div>
           </div>
         </div>
       </div>

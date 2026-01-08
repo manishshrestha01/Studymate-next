@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect, useCallback } from 'react'
 import { fetchGitHubContents, isGitHubConfigured, getGitHubRawUrl } from '../lib/github'
 

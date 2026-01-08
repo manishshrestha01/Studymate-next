@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect, useCallback } from 'react'
 import { getItemsInFolder, createFolder, deleteFolder, getFolders } from '../lib/database'
 import { uploadFile, uploadFiles, deleteFile } from '../lib/storage'
