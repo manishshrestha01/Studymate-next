@@ -22,10 +22,24 @@
   --landing-shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
+/* Text selection color for landing page */
+.landing ::selection {
+  background: #e8e3dc;
+  color: #0a0a0a;
+}
+
+.landing ::-moz-selection {
+  background: #e8e3dc;
+  color: #0a0a0a;
+}
+
 .landing {
   background: var(--landing-bg);
   color: var(--landing-dark);
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
   overflow-x: hidden;
 }
@@ -37,9 +51,8 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.9);
+  background: #ffffffe6;
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--landing-gray-200);
 }
 
@@ -180,6 +193,7 @@
 
 .heroSubtitle {
   font-size: 18px;
+  font-weight: 400;
   color: var(--landing-gray-500);
   max-width: 600px;
   margin: 0 auto 40px;
@@ -398,6 +412,7 @@
 
 .featureDescription {
   font-size: 15px;
+  font-weight: 400;
   color: var(--landing-gray-500);
   line-height: 1.7;
 }
