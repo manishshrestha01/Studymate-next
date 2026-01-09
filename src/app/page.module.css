@@ -38,8 +38,6 @@
   color: var(--landing-dark);
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   font-weight: 400;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
   overflow-x: hidden;
 }
@@ -372,6 +370,7 @@
 
 .sectionSubtitle {
   font-size: 18px;
+  font-weight: 400;
   color: var(--landing-gray-500);
   max-width: 500px;
   margin: 0 auto;
@@ -443,6 +442,7 @@
 
 .aboutText {
   font-size: 16px;
+  font-weight: 400;
   color: var(--landing-gray-600);
   line-height: 1.8;
   margin-bottom: 16px;
@@ -559,6 +559,7 @@
 
 .testimonialQuote {
   font-size: 15px;
+  font-weight: 400;
   color: var(--landing-gray-700);
   line-height: 1.7;
   margin-bottom: 24px;
@@ -596,6 +597,7 @@
 
 .authorRole {
   font-size: 13px;
+  font-weight: 400;
   color: var(--landing-gray-500);
 }
 
@@ -621,6 +623,7 @@
 
 .ctaSubtitle {
   font-size: 18px;
+  font-weight: 400;
   color: var(--landing-gray-400);
   margin-bottom: 40px;
 }
@@ -661,6 +664,7 @@
 
 .footerTagline {
   font-size: 14px;
+  font-weight: 400;
   color: var(--landing-gray-400);
   line-height: 1.7;
   max-width: 280px;
@@ -707,6 +711,7 @@
 .footerColumn a {
   display: block;
   font-size: 14px;
+  font-weight: 400;
   color: var(--landing-gray-400);
   text-decoration: none;
   margin-bottom: 14px;
