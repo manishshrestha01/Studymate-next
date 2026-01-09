@@ -339,10 +339,11 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: rgba(0, 0, 0, 0.1);
+  background: #fff;
   position: relative;
   border-radius: 0 0 12px 12px;
   overflow: hidden;
+  min-height: 0; /* Important for flex children to shrink */
 }
 
 .notes-app.maximized .notes-editor {
@@ -419,25 +420,36 @@
 .excalidraw-wrapper {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
+  min-height: 400px;
+  flex: 1;
+  display: block;
   position: relative;
   padding: 0;
   margin: 0;
   overflow: hidden;
-  touch-action: none;
-  background: #1e1e1e;
 }
 
-/* Excalidraw overrides for dark theme */
+/* Excalidraw overrides - let Excalidraw control its own styling */
 .excalidraw-wrapper .excalidraw {
   width: 100% !important;
   height: 100% !important;
 }
 
-.excalidraw-wrapper .excalidraw .App-menu_top {
-  background: rgba(30, 30, 30, 0.95) !important;
+.excalidraw-wrapper .excalidraw-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Ensure Excalidraw elements are not affected by global resets */
+.excalidraw-wrapper * {
+  box-sizing: initial;
+}
+
+.excalidraw-wrapper button,
+.excalidraw-wrapper input,
+.excalidraw-wrapper select,
+.excalidraw-wrapper textarea {
+  box-sizing: border-box;
 }
 
 /* Loading state for the canvas */
