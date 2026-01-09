@@ -19,6 +19,17 @@
   --auth-radius-lg: 16px;
 }
 
+/* Text selection color */
+.authPage ::selection {
+  background: #e8e3dc;
+  color: #0a0a0a;
+}
+
+.authPage ::-moz-selection {
+  background: #e8e3dc;
+  color: #0a0a0a;
+}
+
 .authPage {
   min-height: 100vh;
   background: var(--auth-bg);
@@ -294,6 +305,25 @@
   flex-shrink: 0;
 }
 
+/* Footer Link */
+.authFooterLink {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--auth-gray-600);
+}
+
+.authFooterLink a {
+  color: var(--auth-dark);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.authFooterLink a:hover {
+  opacity: 0.7;
+}
+
 /* Responsive - Mobile */
 @media (max-width: 768px) {
   .authNavLinks {
@@ -348,31 +378,76 @@
   .authPage {
     height: 100dvh;
   }
+  
+  .authNav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--auth-gray-200);
+    padding-top: max(0px, env(safe-area-inset-top));
+  }
 
   .authNavContainer {
-    padding: 12px 16px;
+    padding: max(12px, env(safe-area-inset-top)) 12px 12px 12px;
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .authLogoText {
+    display: inline;
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: 6px;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .authNavLinks {
+    display: none;
+  }
+
+  .authMobileMenuBtn {
+    display: flex;
   }
 
   .authContent {
-    padding: 100px 16px 32px;
+    padding: max(70px, calc(60px + env(safe-area-inset-top))) 16px max(32px, env(safe-area-inset-bottom)) 16px;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
   }
 
   .authCard {
-    padding: 28px 20px;
+    width: 100%;
+    padding: 24px 16px;
     border-radius: 12px;
+    background: var(--auth-white);
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .authTitle {
     font-size: 22px;
+    margin-bottom: 20px;
+    text-align: center;
   }
 
   .authInput {
     padding: 12px 14px;
-    font-size: 16px;
+    font-size: 16px; /* Prevent zoom on iOS */
+    margin-bottom: 16px;
   }
 
   .authBtnPrimary,
   .authBtnGoogle {
+    min-height: 44px;
     padding: 12px 20px;
     font-size: 14px;
   }
