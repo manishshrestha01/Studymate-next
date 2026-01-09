@@ -314,10 +314,10 @@ export default function Landing() {
               </div>
               <div className={styles.footerColumn}>
                 <h4>Semesters</h4>
-                <Link href="/">Semester 1-2</Link>
-                <Link href="/">Semester 3-4</Link>
-                <Link href="/">Semester 5-6</Link>
-                <Link href="/">Semester 7-8</Link>
+                <Link href="/dashboard">Semester 1-2</Link>
+                <Link href="/dashboard">Semester 3-4</Link>
+                <Link href="/dashboard">Semester 5-6</Link>
+                <Link href="/dashboard">Semester 7-8</Link>
               </div>
               <div className={styles.footerColumn}>
                 <h4>Account</h4>
@@ -327,7 +327,7 @@ export default function Landing() {
             </div>
           </div>
           <div className={styles.footerBottom}>
-            <p>© 2025 PU Notes. Built with ❤️ for students.</p>
+            <p>© 2026 StudyMate. Built with ❤️ for students.</p>
             <div className={styles.footerBottomLinks}>
               <Link href="/privacy-policy">Privacy Policy</Link>
               <Link href="/terms-of-service">Terms of Service</Link>
