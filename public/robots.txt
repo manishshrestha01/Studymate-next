@@ -1,0 +1,11 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow admin/private paths
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /user-info/
+
+# Sitemap
+Sitemap: https://www.manishshrestha012.com.np/sitemap.xml

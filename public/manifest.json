@@ -1,0 +1,21 @@
+{
+  "name": "StudyMate - PU Computer Engineering Notes",
+  "short_name": "StudyMate",
+  "description": "Access comprehensive notes, study materials, and resources for all 8 semesters of Computer Engineering at Pokhara University.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007AFF",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/black.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "lang": "en",
+  "scope": "/"
+}
